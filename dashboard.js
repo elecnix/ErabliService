@@ -411,21 +411,17 @@ exports.Dashboard = function(config, WebSocketClient) {
       "valves": config.valves,
       "vacuum": config.vacuum,
       "pumps": config.pumps
-      // "temperatures": config.temperatures
     }
-    return exists(filename).then(function (exists) {
-      if (exists) {
-        console.log("Loading " + filename);
-        return readFile(filename, 'utf8').then(JSON.parse).then(function(dashData) {
-          return load(configData, dashData);
-        });
-      } else {
-        console.log("Dashboard data not found. Initializing.");
-        return load(configData, configData);
-      }
-    }).then(function() {
-      console.log("Completed initialization.");
-    });
+    console.log("Initializing dashboard");
+    if (fs.existsSync(filename)) {
+      console.log("Loading " + filename);
+      return readFile(filename, 'utf8').then(JSON.parse).then(function(dashData) {
+        return load(configData, dashData);
+      });
+    } else {
+      console.log("Dashboard data not found. Initializing.");
+      return load(configData, configData);
+    }
   }
 
   function getData() {
